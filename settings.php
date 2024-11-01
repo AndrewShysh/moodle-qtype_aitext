@@ -66,6 +66,12 @@ if ($ADMIN->fulltree) {
         new lang_string('responseformat_setting', 'qtype_aitext'),
         0, ['plain' => 'plain', 'editor' => 'editor', 'monospaced' => 'monospaced']
     ));
+    $settings->add(new admin_setting_configcheckbox(
+        'qtype_aitext/usemebisai',
+        new lang_string('usemebis_ai', 'qtype_aitext'),
+        new lang_string('usemebis_ai_setting', 'qtype_aitext'),
+        0
+    ));
 
 }
 
