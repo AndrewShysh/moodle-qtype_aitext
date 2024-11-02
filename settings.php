@@ -38,7 +38,7 @@ if ($ADMIN->fulltree) {
         'qtype_aitext/disclaimer',
         new lang_string('disclaimer', 'qtype_aitext'),
         new lang_string('disclaimer_setting', 'qtype_aitext'),
-        '(Response provided by [[model]])'
+        '(Response provided by an AI System)'
         ));
     $settings->add(new admin_setting_configtextarea(
         'qtype_aitext/prompt',

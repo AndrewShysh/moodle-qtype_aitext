@@ -57,7 +57,7 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
 
     /**
      * LLM Model, will vary between AI systems, e.g. gpt4 or llama3
-     * @var stream_set_blocking
+     * @var $model
      */
     public $model;
 
@@ -149,6 +149,7 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
      * settings checkbox.
      *
      * @param string $prompt
+     * @param string $purpose
      * @return string $response
      */
     public function perform_request(string $prompt, string $purpose): string {
@@ -166,7 +167,6 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
             }
             return $llmresponse->get_content();
         } else {
-            xdebug_break();
             global $USER;
             $manager = new \core_ai\manager();
             $action = new \core_ai\aiactions\generate_text(
@@ -301,10 +301,6 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
             $contentobject->feedback = trim($contentobject->feedback);
             $contentobject->feedback = preg_replace(['/\[\[/', '/\]\]/'], '"', $contentobject->feedback);
             $disclaimer = get_config('qtype_aitext', 'disclaimer');
-            // TODO Model currently is only used for connecting and at this point I believe.
-            // We need to remove all the model selection logic or make local_ai_manager support the selection of models.
-            $disclaimer = str_replace("[[model]]",
-                    \local_ai_manager\ai_manager_utils::get_connector_instance_by_purpose('feedback')->get_model(), $disclaimer);
             $contentobject->feedback .= ' '.$this->llm_translate($disclaimer);
         } else {
             $contentobject = (object) [
