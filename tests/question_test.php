@@ -109,14 +109,14 @@ final class question_test extends \advanced_testcase {
      * LLM is constructed
      * @covers ::build_full_ai_prompt
      */
-    public function test_build_full_ai_prompt() :void {
+    public function test_build_full_ai_prompt(): void {
         $this->resetAfterTest();
 
         $question = qtype_aitext_test_helper::make_aitext_question([]);
-        set_config('prompt', 'in [responsetext] ','qtype_aitext');
-        set_config('defaultprompt', 'check this','qtype_aitext');
-        set_config('markscheme', 'one mark','qtype_aitext');
-        set_config('jsonprompt', 'testprompt','qtype_aitext');
+        set_config('prompt', 'in [responsetext] ', 'qtype_aitext');
+        set_config('defaultprompt', 'check this', 'qtype_aitext');
+        set_config('markscheme', 'one mark', 'qtype_aitext');
+        set_config('jsonprompt', 'testprompt', 'qtype_aitext');
 
         $response = '<p> Thank you </p>';
         $result = $question->build_full_ai_prompt($response, $aiprompt, $defaultmark, $markscheme);
@@ -128,7 +128,7 @@ final class question_test extends \advanced_testcase {
         $markscheme = "2 points";
         $result = $question->build_full_ai_prompt($response, $aiprompt, $defaultmark, $markscheme);
         $this->assertStringContainsString('2 points', $result);
-}
+    }
 
     /**
      * Check that non valid json returned from the LLM is
