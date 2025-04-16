@@ -52,7 +52,7 @@ final class question_test extends \advanced_testcase {
      * tests will be skipped
      * @var bool
      */
-    protected int $islive;
+    protected bool $islive = false;
 
     /**
      * Config.php should include the apikey and orgid in the form
@@ -74,6 +74,7 @@ final class question_test extends \advanced_testcase {
      * Make a trivial request to the LLM to check the code works
      * Only designed to test the 4.5 subsystem when run locally
      * not when in GHA ci
+     *
      * @covers \qtype_aitext\question::perform_request
      * @return void
      */
@@ -111,6 +112,9 @@ final class question_test extends \advanced_testcase {
      */
     public function test_build_full_ai_prompt(): void {
         $this->resetAfterTest();
+        if (!$this->islive) {
+                $this->markTestSkipped('No live connection to the AI system');
+        }
 
         $question = qtype_aitext_test_helper::make_aitext_question([]);
         set_config('prompt', 'in [responsetext] ', 'qtype_aitext');
@@ -119,6 +123,9 @@ final class question_test extends \advanced_testcase {
         set_config('jsonprompt', 'testprompt', 'qtype_aitext');
 
         $response = '<p> Thank you </p>';
+        $aiprompt = '';
+        $defaultmark = '';
+        $markscheme = '';
         $result = $question->build_full_ai_prompt($response, $aiprompt, $defaultmark, $markscheme);
 
         $this->assertStringContainsString('[[ Thank you ]]', $result);

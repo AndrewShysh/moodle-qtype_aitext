@@ -94,29 +94,29 @@ function xmldb_qtype_aitext_upgrade($oldversion) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-        if ($oldversion < 2025041000) {
+        upgrade_plugin_savepoint(true, 2024071895, 'qtype', 'aitext');
 
-            // Define table qtype_aitext_sampleanswers to be created.
-            $table = new xmldb_table('qtype_aitext_sampleanswers');
+    }
+    if ($oldversion < 2025041000) {
 
-            // Adding fields to table qtype_aitext_sampleanswers.
-            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-            $table->add_field('question', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('response', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // Define table qtype_aitext_sampleanswers to be created.
+        $table = new xmldb_table('qtype_aitext_sampleanswers');
 
-            // Adding keys to table qtype_aitext_sampleanswers.
-            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-            $table->add_key('ait_sampleanswers', XMLDB_KEY_FOREIGN, ['question'], 'qtype_aitext', ['id']);
+        // Adding fields to table qtype_aitext_sampleanswers.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('question', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('response', XMLDB_TYPE_TEXT, null, null, null, null, null);
 
-            // Conditionally launch create table for qtype_aitext_sampleanswers.
-            if (!$dbman->table_exists($table)) {
-                $dbman->create_table($table);
-            }
+        // Adding keys to table qtype_aitext_sampleanswers.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('ait_sampleanswers', XMLDB_KEY_FOREIGN, ['question'], 'qtype_aitext', ['id']);
 
-            // Aitext savepoint reached.
-            upgrade_plugin_savepoint(true, 2025041000, 'qtype', 'aitext');
+        // Conditionally launch create table for qtype_aitext_sampleanswers.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
         }
-        // Aitext savepoint reached.
+
+         // Aitext savepoint reached.
         upgrade_plugin_savepoint(true, 2025041000, 'qtype', 'aitext');
     }
 
