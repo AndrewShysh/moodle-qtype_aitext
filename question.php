@@ -176,9 +176,8 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
             }
             return $llmresponse->get_content();
         } else if ($backend == 'core_ai_subsystem') {
-            global $USER, $CFG, $DB;
-            // There was a breaking change in the move to Moodle 5x.
-            if (str_starts_with($CFG->release, '5')) {
+            global $USER,$CFG, $DB;
+            if(str_starts_with($CFG->release, '5')) {
                 $manager = new \core_ai\manager($DB);
             } else {
                 $manager = new \core_ai\manager();
@@ -271,6 +270,12 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
      * @return string;
      */
     public function build_full_ai_prompt($response, $aiprompt, $defaultmark, $markscheme): string {
+
+        // Check if [questiontext] is in the aiprompt and replace it with the question text
+        if (strpos($aiprompt, '[questiontext]') !== false) {
+            $aiprompt = str_replace('[questiontext]', strip_tags($this->questiontext), $aiprompt);
+        }
+
         $responsetext = strip_tags($response);
             $responsetext = '[['.$responsetext.']]';
             $prompt = get_config('qtype_aitext', 'prompt');
