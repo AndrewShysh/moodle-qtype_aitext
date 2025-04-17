@@ -71,9 +71,9 @@ class qtype_aitext_question extends question_graded_automatically_with_countback
     /**
      * used in the question editing interface
      *
-     * @var string
+     * @var array
      */
-    public $sampleanswer;
+    public $sampleresponses;
 
     /**
      * Information on how to manually grade

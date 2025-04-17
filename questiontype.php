@@ -67,6 +67,7 @@ class qtype_aitext extends question_type {
     public function response_file_areas() {
         return ['attachments', 'answer'];
     }
+
     /**
      * Loads the question type specific options for the question
      *
@@ -77,8 +78,8 @@ class qtype_aitext extends question_type {
         global $DB;
         $question->options = $DB->get_record('qtype_aitext',
                 ['questionid' => $question->id], '*', MUST_EXIST);
-        $question->options->sampleanswers = $DB->get_records(
-            'qtype_aitext_sampleanswers',
+        $question->options->sampleresponses = $DB->get_records(
+            'qtype_aitext_sampleresponses',
             ['question' => $question->id],
             'id ASC',
             '*'
@@ -97,8 +98,6 @@ class qtype_aitext extends question_type {
         $this->set_default_value('responseformat', $fromform->responseformat);
         $this->set_default_value('responsefieldlines', $fromform->responsefieldlines);
         $this->set_default_value('markscheme', $fromform->markscheme);
-        $this->set_default_value('sampleanswer', $fromform->sampleanswer);
-
     }
     /**
      * Write the question data from the editing form to the database
@@ -145,11 +144,10 @@ class qtype_aitext extends question_type {
         $options->responsetemplateformat = $formdata->responsetemplate['format'];
 
         $DB->update_record('qtype_aitext', $options);
-
-        foreach ($formdata->sampleanswers as $sa) {
-            $sampleanswer['question'] = $formdata->id;
-            $sampleanswer['response'] = $sa;
-            $DB->insert_record('qtype_aitext_sampleanswers', $sampleanswer);
+        foreach ($formdata->sampleresponses as $sr) {
+            $sampleresponse['question'] = $formdata->id;
+            $sampleresponse['response'] = $sr;
+            $DB->insert_record('qtype_aitext_sampleresponses', $sampleresponse);
         }
     }
     /**
@@ -173,7 +171,7 @@ class qtype_aitext extends question_type {
         $question->aiprompt = $questiondata->options->aiprompt;
         $question->markscheme = $questiondata->options->markscheme;
         parent::get_question_options($question);
-        $question->options->sampleanswers = $this->get_sampleanswers($question);
+        $question->sampleresponses = $this->get_sampleresponses($question);
 
         /* Legacy quesitons may not have a model set, so assign the first in the settings */
         if (empty($question->model)) {
@@ -190,10 +188,10 @@ class qtype_aitext extends question_type {
      * @param qtype_aitext $question
      * @return array
      */
-    public function get_sampleanswers($question) {
+    public function get_sampleresponses($question) {
         global $DB;
-        $sampleanswers = $DB->get_records('qtype_aitext_sampleanswers', ['question' => $question->id]);
-        return $sampleanswers;
+        $sampleresponses = $DB->get_records('qtype_aitext_sampleresponses', ['question' => $question->id]);
+        return $sampleresponses;
     }
 
     /**
@@ -350,6 +348,12 @@ class qtype_aitext extends question_type {
         if (is_array($extraanswersfields)) {
             array_shift($extraanswersfields);
         }
+        if (isset($data['#']['sampleresponse'])) {
+            $sampleresponses = $data['#']['sampleresponse'];
+            foreach ($sampleresponses as $key => $srxml) {
+                $qo->sampleresponses[$key] = $format->getpath($srxml, ['#', 'response', 0, '#'], 0);
+            }
+        }
 
         return $qo;
     }
@@ -380,12 +384,18 @@ class qtype_aitext extends question_type {
                 $output .= $format->write_files($files);
                 $output .= "    </$field>\n";
             } else {
-                $value = $question->options->$field;
+                $value = $question->xmloptions->$field;
                 if ($field == 'errorcmid') {
                     $value = $this->export_errorcmid($value);
                 }
                 $output .= "    <$field>".$format->xml_escape($value)."</$field>\n";
             }
+        }
+        foreach ($question->options->sampleresponses as $sampleresponse) {
+            $output .= "     <sampleresponse>\n";
+            $output .= '      <question>' . $sampleresponse->question . "</question>\n";
+            $output .= '      <response>' . $sampleresponse->response . "</response>\n";
+            $output .= "     </sampleresponse>\n";
         }
 
         return $output;

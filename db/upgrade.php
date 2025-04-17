@@ -97,7 +97,7 @@ function xmldb_qtype_aitext_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024071895, 'qtype', 'aitext');
 
     }
-    if ($oldversion < 2025041000) {
+    if ($oldversion < 2025041800) {
 
         // Define table qtype_aitext_sampleanswers to be created.
         $table = new xmldb_table('qtype_aitext_sampleanswers');
@@ -117,7 +117,7 @@ function xmldb_qtype_aitext_upgrade($oldversion) {
         }
 
          // Aitext savepoint reached.
-        upgrade_plugin_savepoint(true, 2025041000, 'qtype', 'aitext');
+        upgrade_plugin_savepoint(true, 2025041800, 'qtype', 'aitext');
     }
 
     return true;
