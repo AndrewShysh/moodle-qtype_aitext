@@ -117,7 +117,7 @@ class qtype_aitext_edit_form extends question_edit_form {
                 . get_string('sampleresponseeval', 'qtype_aitext')
                 . '</label></div>'
                 . '<div class="col-md-9 form-inline felement">'
-                . '<div id="id_sampleresponseeval_0" class="form-control w-100" style="min-height:5em; overflow:auto;"></div>'
+                . '<div id="id_sampleresponseeval" class="form-control w-100" style="min-height:5em; overflow:auto;"></div>'
                 . '</div>'
                 . '</div>'
             ),
