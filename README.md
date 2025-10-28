@@ -1,4 +1,4 @@
-###  Moodle AI Text Quiz Question type by Marcus Green
+###  Moodle AI Text Quiz Question type by Marcus Green, modified for digiuni project
 
 This Moodle question type accepts free text which is then evaluated by a remote Large Language Model AI system such as ChatGPT. Each question can have its own feedback and grading prompts. For custom development and consultancy contact Moodle Partner Catalyst EU (https://www.catalyst-eu.net/).
 
